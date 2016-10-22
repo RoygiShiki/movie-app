@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="shiki">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+	<title>卖座电影</title>
+</head>
+<script src="js/ionic.bundle.js"></script>
+<script src="js/swiper-3.3.1.jquery.min.js"></script>
+<link rel="stylesheet" href="css/ionic.css">
+
+<body ng-controller="indexCtrl">
+	<ion-header-bar class="bar-dark" align-title="left">
+		<button class="button button-icon ion-navicon"></button>
+		<h6 class="title" style="font-size: 13px;">卖座电影</h3>
+		<button class="button button-icon ion-android-person"></button>
+	</ion-header-bar>
+
+	<ion-content>
+		<img ng-repeat="pic in pics" ng-src="{{pic}}">
+	</ion-content>
+</body>
+
+<script>
+	var app = angular.module('shiki', ['ionic']);
+	app.controller('indexCtrl', ['$scope', '$http', function($scope, $http){
+		$scope.pics = [];
+		$http.jsonp("http://localhost:8888", {
+			params: {
+				callback: 'JSON_CALLBACK',
+			}
+		}).success(function(data) {
+			console.log(data);
+			var things = data.data.billboards;
+			console.log(things);
+			for(i = 0; i < things.length; i++){
+				$scope.pics = $scope.pics.concat(things[i].imageUrl);
+			}
+			console.log($scope.pics);
+		})
+	}])
+</script>
+
+</html>
