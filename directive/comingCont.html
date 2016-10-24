@@ -1,0 +1,52 @@
+<div class="blank"></div>
+
+<div class="devide">
+	<div class="line"></div>
+	<div class="classify">即将上映</div>
+</div>
+
+<div class="list card" ng-repeat="c_poster in c_posters">
+	<div class="item item-image">
+		<img ng-src="{{c_poster}}" alt="">
+	</div>
+	<div class="item item-icon-right assertive">
+		<p class="name">{{c_name[$index]}}</p>
+		<i class="date">{{c_premiereAt[$index]}}上映</i>
+	</div>
+</div>
+
+<div class="row">
+    <button class="button button-outline button-small col col-50 col-offset-25">
+        更多即将上映电影
+    </button>
+</div>
+
+<div class="blank"></div>
+
+<style>
+	.blank{
+		height: 60px;
+	}
+	.divide{
+		height: 40px;
+		width: 100%;
+		margin-top: 100px;
+	}
+	.line{
+		height: 10px;
+		border-top: 1px solid gray;
+	}
+	.classify{
+		height: 20px;
+		width: 60px;
+		text-align: center;
+		margin: 0 auto;
+		font-size: 12px!important;
+		border-radius: 4px!important;
+		background: gray!important;
+		color: #fff!important;
+	}
+	.date{
+		font-size: 12px!important;
+	}
+</style>

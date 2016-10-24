@@ -1,0 +1,62 @@
+<ion-slide-box class="lunbobox" auto-play="true" does-continue="true" slide-interval="3000">
+	<ion-slide>
+		<img ng-src="{{pics[0]}}">
+	</ion-slide>
+	<ion-slide>
+		<img ng-src="{{pics[1]}}">
+	</ion-slide>
+	<ion-slide>
+		<img ng-src="{{pics[2]}}">
+	</ion-slide>
+	<ion-slide>
+		<img ng-src="{{pics[3]}}">
+	</ion-slide>
+</ion-slide-box>
+
+<div class="list card" ng-repeat="poster in posters">
+	<div class="item item-image">
+		<img ng-src="{{poster}}" alt="">
+	</div>
+	<div class="item item-icon-right assertive">
+		<p class="name">{{name[$index]}}</p>
+		<p class="cinemaCount">{{cinemaCount[$index]}}家影院上映 {{watchCount[$index]}}人购票</p>
+		<i class="grade icon">{{grade[$index]}}</i>
+	</div>
+</div>
+
+<div class="row">
+    <button class="button button-outline button-small col col-33 col-offset-33">
+        更多热映电影
+    </button>
+</div>
+
+<div class="list bar bar-subheader">
+	<a href="#" class="item item-icon-right">
+		1
+		<i class="icon ion-android-arrow-dropright"></i>
+	</a>
+</div>
+
+
+
+
+
+<style>
+		.lunbobox{
+			width: 100%;
+		}
+		.lunbobox img{
+		    width: 100%;
+		}
+		.name{
+			font-size: 12px!important;
+			font-weight: bold;
+		}
+		.cinemaCount{
+			font-size: 12px!important;
+			color: gray!important;
+		}
+		.grade{
+			font-size: 22px!important;
+		}
+	</style>

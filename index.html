@@ -6,39 +6,115 @@
 	<title>卖座电影</title>
 </head>
 <script src="js/ionic.bundle.js"></script>
-<script src="js/swiper-3.3.1.jquery.min.js"></script>
 <link rel="stylesheet" href="css/ionic.css">
 
 <body ng-controller="indexCtrl">
-	<ion-header-bar class="bar-dark" align-title="left">
-		<button class="button button-icon ion-navicon"></button>
-		<h6 class="title" style="font-size: 13px;">卖座电影</h3>
-		<button class="button button-icon ion-android-person"></button>
-	</ion-header-bar>
+	<headers></headers>
+	<!-- <ion-content> -->
+		<ion-side-menus>
+			<ion-side-menu-content>
+				<ion-content>
+					<cont></cont>
+					<coming></coming>
+				</ion-content>
+			</ion-side-menu-content>
 
-	<ion-content>
-		<img ng-repeat="pic in pics" ng-src="{{pic}}">
-	</ion-content>
+			<ion-side-menu side="left">
+				<p>123</p>
+				<p>456</p>
+				<p>789</p>
+			</ion-side-menu>
+		</ion-side-menus>
+	<!-- </ion-content> -->
 </body>
 
+<script src="js/basic.js"></script>
 <script>
 	var app = angular.module('shiki', ['ionic']);
+
 	app.controller('indexCtrl', ['$scope', '$http', function($scope, $http){
 		$scope.pics = [];
-		$http.jsonp("http://localhost:8888", {
-			params: {
-				callback: 'JSON_CALLBACK',
-			}
-		}).success(function(data) {
-			console.log(data);
-			var things = data.data.billboards;
-			console.log(things);
-			for(i = 0; i < things.length; i++){
-				$scope.pics = $scope.pics.concat(things[i].imageUrl);
-			}
-			console.log($scope.pics);
-		})
+		$scope.posters = [];
+		$scope.name = [];
+		$scope.cinemaCount = [];
+		$scope.watchCount = [];
+		$scope.grade = [];
+		$scope.c_posters = [];
+		$scope.c_name = [];
+		$scope.c_premiereAt = [];
+
+		var figure = function(){
+			$http.jsonp("http://localhost:8888", {
+				params: {
+					callback: 'JSON_CALLBACK',
+				}
+			}).success(function(data) {
+				var things = data.data.billboards;
+				for(i = 0; i < things.length; i++){
+					$scope.pics = $scope.pics.concat(things[i].imageUrl);
+				}
+			})
+		}
+
+		var loadMore = function(){
+			$http.jsonp("http://localhost:8899", {
+				params: {
+					page: 2,
+					callback: 'JSON_CALLBACK',
+				}
+			}).success(function(data) {
+				console.log(data);
+				var movies = data.data.films;
+				for(i = 0; i < movies.length; i++){
+					$scope.posters = $scope.posters.concat(movies[i].cover.origin);
+					$scope.name = $scope.name.concat(movies[i].name);
+					$scope.cinemaCount = $scope.cinemaCount.concat(movies[i].cinemaCount);
+					$scope.watchCount = $scope.watchCount.concat(movies[i].watchCount);
+					$scope.grade = $scope.grade.concat(movies[i].grade);
+				}
+			})
+		}
+
+		var loadMoreComing = function(){
+			$http.jsonp("http://localhost:8877", {
+				params: {
+					callback: 'JSON_CALLBACK',
+				}
+			}).success(function(data) {
+				console.log(data);
+				var c_movies = data.data.films;
+				for(i = 0; i < c_movies.length; i++){
+					$scope.c_posters = $scope.c_posters.concat(c_movies[i].cover.origin);
+					$scope.c_name = $scope.c_name.concat(c_movies[i].name);
+					$scope.c_premiereAt = $scope.c_premiereAt.concat(new Date(c_movies[i].premiereAt).toLocaleString().replace(/:\d{1,2}$/,' '));
+				}
+			})
+		}
+
+		figure();
+		loadMore();
+		loadMoreComing();
 	}])
+
+	app.directive('headers', function(){
+		return {
+			templateUrl: 'directive/headers.html',
+		}
+	})
+
+	app.directive('cont', function(){
+		return {
+			templateUrl: 'directive/indexCont.html',
+		}
+	})
+
+	app.directive('coming', function(){
+		return {
+			templateUrl: 'directive/comingCont.html',
+		}
+	})
+
+	       
 </script>
 
 </html>
