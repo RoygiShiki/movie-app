@@ -4,12 +4,12 @@ var url = require('url');
 //处理字符串
 var querystring = require('querystring');
 
-function reponseComing(response,param) {
+function reponseDetail(response,param) {
 	
 	http.request({
 		hostname: 'm.maizuo.com',
 		port: '80',
-		path: '/v4/api/film/coming-soon?__t=1477293193664&page=' + param.page + '&count=3',
+		path: '/v4/api/film/3389?__t=1477399734348',
 		method: 'GET',
 		/*headers:{
 			'apiKey':'0aea38d1a7c4443f2f00adc86c4c3e72'
@@ -50,6 +50,6 @@ http.createServer(function(request, response) {
 		skill: ['ps', 'nodejs', 'js']
 	}
 	// reponseMsg(response,param);
-	reponseComing(response,param);
+	reponseDetail(response,param);
 	//response.end(param.callback + '(' + JSON.stringify(datas) + ")")
-}).listen(8877)
+}).listen(8833)

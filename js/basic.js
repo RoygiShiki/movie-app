@@ -12,7 +12,7 @@ var figure = function(){
 }
 
 var loadMore = function(){
-	$http.jsonp("http://localhost:8899", {
+	$http.jsonp("http://localhost:8892", {
 		params: {
 			callback: 'JSON_CALLBACK',
 		}
@@ -25,6 +25,7 @@ var loadMore = function(){
 			$scope.cinemaCount = $scope.cinemaCount.concat(movies[i].cinemaCount);
 			$scope.watchCount = $scope.watchCount.concat(movies[i].watchCount);
 			$scope.grade = $scope.grade.concat(movies[i].grade);
+			$scope.id = $scope.id.concat(i);
 		}
 	})
 }
@@ -35,7 +36,7 @@ var loadMoreComing = function(){
 			callback: 'JSON_CALLBACK',
 		}
 	}).success(function(data) {
-		console.log(data);
+		// console.log(data);
 		var c_movies = data.data.films;
 		for(i = 0; i < c_movies.length; i++){
 			$scope.c_posters = $scope.c_posters.concat(c_movies[i].cover.origin);

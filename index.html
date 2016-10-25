@@ -6,64 +6,94 @@
 	<title>卖座电影</title>
 </head>
 <script src="js/ionic.bundle.js"></script>
+<script src="js/angular-route.js"></script>
 <link rel="stylesheet" href="css/ionic.css">
 
 <body ng-controller="indexCtrl">
-	<headers></headers>
+	<!-- <headers></headers> -->
 	<!-- <ion-content> -->
 		<ion-side-menus>
 			<ion-side-menu-content>
+				<headers></headers>
 				<ion-content>
-					<cont></cont>
-					<coming></coming>
+					<div ng-view></div>
 				</ion-content>
 			</ion-side-menu-content>
 
-			<ion-side-menu side="left">
-				<p>123</p>
-				<p>456</p>
-				<p>789</p>
-			</ion-side-menu>
+			<menu></menu>
 		</ion-side-menus>
 	<!-- </ion-content> -->
 </body>
 
-<script src="js/basic.js"></script>
 <script>
-	var app = angular.module('shiki', ['ionic']);
+	var app = angular.module('shiki', ['ionic','ngRoute']);
 
-	app.controller('indexCtrl', ['$scope', '$http', function($scope, $http){
+	app.service('req', ['$http', function($http) {
+		//用服务在控制器之间传递数据的时候，我们可以定义一个对象，然后把这个对象注入到需要传递数据的两个控制器里面
+		//然后我们在服务这个单例对象中定义一个用于交换的属性，然后给它赋值，然后我们在另外一个控制器里面获取这个对象属性的值
+		return {
+			figure: function(fn){
+				$http.jsonp("http://localhost:8888", {
+					params: {
+						callback: 'JSON_CALLBACK',
+					}
+				}).success(function(data){
+					fn(data);
+				})
+			},
+
+			load: function(fn){
+				$http.jsonp("http://localhost:8686", {
+					params: {
+						callback: 'JSON_CALLBACK',
+						page: this.page1,
+					}
+				}).success(function(data){
+					fn(data);
+				})
+			},
+
+			loadComing: function(fn){
+				$http.jsonp("http://localhost:8877", {
+					params: {
+						callback: 'JSON_CALLBACK',
+						page: this.page2,
+					}
+				}).success(function(data){
+					fn(data);
+				})
+			},
+
+			page1: 1,
+			page2: 1,
+		}
+	}])
+
+	app.controller('indexCtrl', ['$scope', '$http', 'req', function($scope, $http, req){
+		$scope.page = 0;
 		$scope.pics = [];
 		$scope.posters = [];
 		$scope.name = [];
 		$scope.cinemaCount = [];
 		$scope.watchCount = [];
 		$scope.grade = [];
+		$scope.ids = [];
 		$scope.c_posters = [];
 		$scope.c_name = [];
 		$scope.c_premiereAt = [];
 
-		var figure = function(){
-			$http.jsonp("http://localhost:8888", {
-				params: {
-					callback: 'JSON_CALLBACK',
-				}
-			}).success(function(data) {
-				var things = data.data.billboards;
-				for(i = 0; i < things.length; i++){
-					$scope.pics = $scope.pics.concat(things[i].imageUrl);
-				}
-			})
-		}
+		req.figure(function(data){
+			var things = data.data.billboards;
+			for(i = 0; i < things.length; i++){
+				$scope.pics = $scope.pics.concat(things[i].imageUrl);
+			}
+		});
 
-		var loadMore = function(){
-			$http.jsonp("http://localhost:8899", {
-				params: {
-					page: 2,
-					callback: 'JSON_CALLBACK',
-				}
-			}).success(function(data) {
+		$scope.loadMore = function(){
+			req.load(function(data){
 				console.log(data);
+				req.page1++;
+				console.log(req.page1);
 				var movies = data.data.films;
 				for(i = 0; i < movies.length; i++){
 					$scope.posters = $scope.posters.concat(movies[i].cover.origin);
@@ -71,30 +101,32 @@
 					$scope.cinemaCount = $scope.cinemaCount.concat(movies[i].cinemaCount);
 					$scope.watchCount = $scope.watchCount.concat(movies[i].watchCount);
 					$scope.grade = $scope.grade.concat(movies[i].grade);
+					$scope.ids = $scope.ids.concat(movies[i].id);
 				}
-			})
+			});
 		}
 
-		var loadMoreComing = function(){
-			$http.jsonp("http://localhost:8877", {
-				params: {
-					callback: 'JSON_CALLBACK',
-				}
-			}).success(function(data) {
-				console.log(data);
+		$scope.loadMoreComing = function(){
+			req.loadComing(function(data){
+				req.page2++;
 				var c_movies = data.data.films;
 				for(i = 0; i < c_movies.length; i++){
 					$scope.c_posters = $scope.c_posters.concat(c_movies[i].cover.origin);
 					$scope.c_name = $scope.c_name.concat(c_movies[i].name);
 					$scope.c_premiereAt = $scope.c_premiereAt.concat(new Date(c_movies[i].premiereAt).toLocaleString().replace(/:\d{1,2}$/,' '));
 				}
-			})
+			});
 		}
 
-		figure();
-		loadMore();
-		loadMoreComing();
+		$scope.loadMore();
+		$scope.loadMoreComing();
+
 	}])
+
+	app.controller('filmCtrl', ['$scope', function($scope){
+		
+	}])
+
 
 	app.directive('headers', function(){
 		return {
@@ -113,6 +145,21 @@
 			templateUrl: 'directive/comingCont.html',
 		}
 	})
+
+	app.directive('menu', function(){
+		return {
+			templateUrl: 'directive/side_menu.html',
+		}
+	})
+
+	app.config(['$routeProvider',function($routeProvider) {
+		$routeProvider.when('/film/:id', {
+			templateUrl: 'template/film.html',
+			// controller: 'filmCtrl',
+		}).otherwise({
+			templateUrl: 'template/indexRoute.html',
+		})
+	}])
 
 	       
 </script>

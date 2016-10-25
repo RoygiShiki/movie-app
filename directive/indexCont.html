@@ -13,33 +13,24 @@
 	</ion-slide>
 </ion-slide-box>
 
-<div class="list card" ng-repeat="poster in posters">
-	<div class="item item-image">
-		<img ng-src="{{poster}}" alt="">
+<a href="#/film/{{id}}" ng-repeat="id in ids track by $index">
+	<div class="list card">
+		<div class="item item-image">
+			<img ng-src="{{posters[$index]}}" alt="">
+		</div>
+		<div class="item item-icon-right assertive">
+			<p class="name">{{name[$index]}}</p>
+			<p class="cinemaCount">{{cinemaCount[$index]}}家影院上映 {{watchCount[$index]}}人购票</p>
+			<i class="grade icon">{{grade[$index]}}</i>
+		</div>
 	</div>
-	<div class="item item-icon-right assertive">
-		<p class="name">{{name[$index]}}</p>
-		<p class="cinemaCount">{{cinemaCount[$index]}}家影院上映 {{watchCount[$index]}}人购票</p>
-		<i class="grade icon">{{grade[$index]}}</i>
-	</div>
-</div>
+</a>
 
 <div class="row">
-    <button class="button button-outline button-small col col-33 col-offset-33">
+    <button class="button button-outline button-small col col-33 col-offset-33" ng-click="loadMore()">
         更多热映电影
     </button>
 </div>
-
-<div class="list bar bar-subheader">
-	<a href="#" class="item item-icon-right">
-		1
-		<i class="icon ion-android-arrow-dropright"></i>
-	</a>
-</div>
-
-
-
-
 
 <style>
 		.lunbobox{
@@ -58,5 +49,8 @@
 		}
 		.grade{
 			font-size: 22px!important;
+		}
+		a{
+			text-decoration: none;
 		}
 	</style>
