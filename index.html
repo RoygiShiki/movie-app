@@ -69,7 +69,7 @@
 		}
 	}])
 
-	app.controller('indexCtrl', ['$scope', '$http', 'req', function($scope, $http, req){
+	app.controller('indexCtrl', ['$scope', '$http', 'req', '$ionicLoading', '$timeout', '$window', function($scope, $http, req, $ionicLoading, $timeout, $window){
 		$scope.page = 0;
 		$scope.pics = [];
 		$scope.posters = [];
@@ -82,6 +82,11 @@
 		$scope.c_name = [];
 		$scope.c_premiereAt = [];
 
+		$ionicLoading.show({
+			template: 'loading...',
+		})
+		$ionicLoading.hide();
+
 		req.figure(function(data){
 			var things = data.data.billboards;
 			for(i = 0; i < things.length; i++){
@@ -91,9 +96,9 @@
 
 		$scope.loadMore = function(){
 			req.load(function(data){
-				console.log(data);
+				// console.log(data);
 				req.page1++;
-				console.log(req.page1);
+				// console.log(req.page1);
 				var movies = data.data.films;
 				for(i = 0; i < movies.length; i++){
 					$scope.posters = $scope.posters.concat(movies[i].cover.origin);
@@ -118,13 +123,36 @@
 			});
 		}
 
+		$scope.toLogin = function(){
+			$window.location.href = '#/login';
+		}
+
 		$scope.loadMore();
 		$scope.loadMoreComing();
 
 	}])
 
-	app.controller('filmCtrl', ['$scope', function($scope){
-		
+	app.controller('filmCtrl', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams){
+		// console.log($routeParams);
+		// $scope.src = '';
+		// $scope.actors = [];
+
+		$http.jsonp("http://localhost:8833", {
+			params: {
+				callback: 'JSON_CALLBACK',
+				id: $routeParams.id,
+			}
+		}).success(function(data){
+			console.log(data);
+			$scope.src = data.data.film.cover.origin;
+			$scope.director = data.data.film.director;
+			$scope.actors = data.data.film.actors;
+			$scope.nation = data.data.film.nation;
+			$scope.language = data.data.film.language;
+			$scope.category = data.data.film.category;
+			$scope.date = new Date(data.data.film.premiereAt).toLocaleString().replace(/:\d{1,2}$/,' ');
+			$scope.synopsis = data.data.film.synopsis;
+		})
 	}])
 
 
@@ -155,7 +183,9 @@
 	app.config(['$routeProvider',function($routeProvider) {
 		$routeProvider.when('/film/:id', {
 			templateUrl: 'template/film.html',
-			// controller: 'filmCtrl',
+			controller: 'filmCtrl',
+		}).when('/login', {
+			templateUrl: 'template/login.html',
 		}).otherwise({
 			templateUrl: 'template/indexRoute.html',
 		})

@@ -9,7 +9,7 @@ function reponseDetail(response,param) {
 	http.request({
 		hostname: 'm.maizuo.com',
 		port: '80',
-		path: '/v4/api/film/3389?__t=1477399734348',
+		path: '/v4/api/film/' + param.id,
 		method: 'GET',
 		/*headers:{
 			'apiKey':'0aea38d1a7c4443f2f00adc86c4c3e72'
@@ -22,7 +22,7 @@ function reponseDetail(response,param) {
 		request.on('end', function(res) {
 			console.log(data);
 			// response.end(data);
-			response.end(param.callback + '(' + JSON.stringify(data) + ")")
+			response.end(param.callback + '(' + (data) + ")")
 		})
 	}).on('error', function(e) {
 		console.log(e.message);

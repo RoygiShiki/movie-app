@@ -1,4 +1,40 @@
-<div>
-	<img src="#" alt="" class="d_poster">
+<div ng-controller="filmCtrl" class="qwer">
+	<!-- <div>
+		<img src="{{src}}" alt="" class="d_poster">
+	</div> -->
+
+	<div class="list card">
+		<div class="item item-body detail">
+			<img src="{{src}}" alt="" class="full-image">
+
+			<h3><span class="dark-bg light">影片简介</span></h3>
+
+			<p>导&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;演：{{director}}</p>
+			<p>主&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;演：<span ng-repeat="actor in actors">{{actor.name}}、</span></p>
+			<p>地区语言：{{nation}}({{language}})</p>
+			<p>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：{{category}}</p>
+			<p>上映日期：{{date}}</p>
+			<p>{{synopsis}}</p>
+			<p>&nbsp;</p>
+		</div>
+	</div>
+
+	<button class="button button-calm button-small col col-33 col-offset-33" ng-click="toLogin()">
+        立即购票
+    </button>
+
 </div>
-<h1>{{name}}</h1>
+
+<style>
+	h3>span{
+		display: inline-block;
+		border-radius: 6px;
+		width: 80px;
+		text-align: center;
+		height: 28px;
+		line-height: 28px;
+	}
+	.detail>p{
+		font-size: 12px;
+	}
+</style>

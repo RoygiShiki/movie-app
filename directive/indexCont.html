@@ -13,7 +13,7 @@
 	</ion-slide>
 </ion-slide-box>
 
-<a href="#/film/{{id}}" ng-repeat="id in ids track by $index">
+<a href="#/film/{{id}}" ng-repeat="id in ids track by $index" ng-click="filmdetail()">
 	<div class="list card">
 		<div class="item item-image">
 			<img ng-src="{{posters[$index]}}" alt="">
